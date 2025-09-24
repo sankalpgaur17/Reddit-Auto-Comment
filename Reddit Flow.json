@@ -1,0 +1,698 @@
+{
+  "name": "Reddit Flow",
+  "nodes": [
+    {
+      "parameters": {
+        "operation": "search",
+        "location": "allReddit",
+        "keyword": "ayurveda OR multivitamin OR guthealth",
+        "limit": 5,
+        "additionalFields": {
+          "sort": "new"
+        }
+      },
+      "type": "n8n-nodes-base.reddit",
+      "typeVersion": 1,
+      "position": [
+        240,
+        0
+      ],
+      "id": "ffdbce63-53d5-45f0-82ee-c0c5471d3915",
+      "name": "Search for a post",
+      "credentials": {
+        "redditOAuth2Api": {
+          "id": "8h7j0UjJRMc9Bf9F",
+          "name": "Reddit account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "SCRAP REDDIT POSTS\n",
+        "height": 304,
+        "width": 800,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -96,
+        -96
+      ],
+      "typeVersion": 1,
+      "id": "8a402707-e97a-4567-b88d-e4eee456a04d",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "ce0e32f2-3f38-4f45-be40-1d4877f491d3",
+              "leftValue": "={{ $json.Relevant }}",
+              "rightValue": "Yes",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1424,
+        0
+      ],
+      "id": "9e2636b9-bc11-458e-9316-9daf303e1fdc",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "content": "Filter Relevant Posts",
+        "height": 304,
+        "width": 832,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        832,
+        -96
+      ],
+      "typeVersion": 1,
+      "id": "4bd29dcf-7d73-487b-ada1-412688f007a0",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        896,
+        320
+      ],
+      "id": "31096fe4-f170-486c-a7e8-043f7c13a499",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {
+        "content": "Comment Draft\n",
+        "height": 272,
+        "width": 800
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -96,
+        256
+      ],
+      "typeVersion": 1,
+      "id": "59e475cc-2df8-4674-a22b-562d6d4d37ea",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "amount": 11,
+        "unit": "minutes"
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        1456,
+        336
+      ],
+      "id": "79ceea3c-2763-4c72-b601-03aa9f9be2f0",
+      "name": "Wait",
+      "webhookId": "5fceac04-a400-418c-9bde-6f23999b7752"
+    },
+    {
+      "parameters": {
+        "content": "Posts Reddit Comment",
+        "height": 272,
+        "width": 832,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        832,
+        256
+      ],
+      "typeVersion": 1,
+      "id": "18cccbe1-7ec2-42ea-9086-6a3949be0a82",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 16
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -16,
+        0
+      ],
+      "id": "5410b4eb-285d-4c07-a13f-5d70f2fdc9c9",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "407f4949-1d09-4e3a-8d91-af4c84ec28eb",
+              "name": "Post Text",
+              "value": "={{ $json.selftext }}",
+              "type": "string"
+            },
+            {
+              "id": "03c3ea7a-41d5-414e-9f7f-ee73763b3dce",
+              "name": "Subreddit",
+              "value": "={{ $json.subreddit }}",
+              "type": "string"
+            },
+            {
+              "id": "e9b0a48f-f90b-43a6-b001-6dc922e1f1b5",
+              "name": "Title",
+              "value": "={{ $json.title }}",
+              "type": "string"
+            },
+            {
+              "id": "0570f766-3893-41dd-a763-34ad783e7f2c",
+              "name": "Upvotes",
+              "value": "={{ $json.ups }}",
+              "type": "number"
+            },
+            {
+              "id": "0a714c30-cddb-4ae2-aae0-c3011bb2d9d6",
+              "name": "URL",
+              "value": "={{ $json.url }}",
+              "type": "string"
+            },
+            {
+              "id": "a48153c2-2413-4bca-b2d5-e7306e142a1f",
+              "name": "ID",
+              "value": "={{ $json.id }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        464,
+        0
+      ],
+      "id": "8d7a7875-be31-492e-938a-39a76d2ff0b5",
+      "name": "Post Details"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4.1-mini-2025-04-14",
+          "mode": "list",
+          "cachedResultName": "GPT-4.1-MINI-2025-04-14"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=You are given a Reddit Title and Reddit Post.  \nYour task is to decide if the content is relevant to the following context:  \n\nContext: I am interested in posts related to health and wellness, especially those that discuss Ayurveda. Relevant posts include topics like digestion, gut health, holistic healing, nutrition, stress, lifestyle balance, Ayurvedic remedies, herbs, Panchakarma, doshas, and natural wellness practices. Irrelevant posts are about unrelated topics like politics, memes, tech, or random non-health discussions.  \n\nAnswer only with \"Yes\" or \"No\".  \n\nTitle: {{ $json.Title }}  \nReddit Post: {{ $json[\"Post Text\"] }}  \n"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        864,
+        0
+      ],
+      "id": "da6106b4-ab32-47ad-9259-7e4d8b08ad91",
+      "name": "Filter Relevance",
+      "credentials": {
+        "openAiApi": {
+          "id": "ceqiXumfieXIw3az",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "38127575-5cfa-44af-8de0-753c7bb55680",
+              "name": "Relevant",
+              "value": "={{ $json.message.content }}",
+              "type": "string"
+            },
+            {
+              "id": "e818def7-3647-487e-9876-4574f992bd57",
+              "name": "Post Text",
+              "value": "={{ $('Post Details').item.json['Post Text'] }}",
+              "type": "string"
+            },
+            {
+              "id": "6413ed2f-6953-4012-aac3-910f6130c87d",
+              "name": "Subreddit",
+              "value": "={{ $('Post Details').item.json.Subreddit }}",
+              "type": "string"
+            },
+            {
+              "id": "f7da1baa-78fd-44c5-a20b-d4da18b66a8f",
+              "name": "Title",
+              "value": "={{ $('Post Details').item.json.Title }}",
+              "type": "string"
+            },
+            {
+              "id": "fd672d57-b058-4457-b07f-3170cb03f94b",
+              "name": "Upvotes",
+              "value": "={{ $('Post Details').item.json.Upvotes }}",
+              "type": "number"
+            },
+            {
+              "id": "d733b440-f281-4d94-b6af-b37ed75b5f06",
+              "name": "URL",
+              "value": "={{ $('Post Details').item.json.URL }}",
+              "type": "string"
+            },
+            {
+              "id": "d45c848b-dd04-4709-b7a8-cb723e2c5285",
+              "name": "ID",
+              "value": "={{ $('Post Details').item.json.ID }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1216,
+        0
+      ],
+      "id": "94a96f04-4dc0-4e30-90cb-00cf9e92918d",
+      "name": "Relevance (Yes/No)"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4.1-mini-2025-04-14",
+          "mode": "list",
+          "cachedResultName": "GPT-4.1-MINI-2025-04-14"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=You are a fun and friendly marketing intern who loves to chat about Ayurveda, health, and wellness in a casual and genuine way.  \nRead the following Reddit post and come up with a short comment reply.  \n\nGuidelines for your reply:  \n- Keep it casual, informal, and in a natural Reddit tone.  \n- Keep it brief (1 paragraph, max 5–6 lines).  \n- Make it feel authentic and relatable, not salesy.  \n- Provide a little value: share a tip, thought, or perspective on Ayurveda, health, or wellness.  \n- If the post seems to have photos, just reply naturally as best you can without needing to see them.  \n- Do not include emojis or formatting in your response.  \n\nReddit Post Title: {{ $json.Title }}  \nReddit Post: {{ $json[\"Post Text\"] }}  \n"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        32,
+        320
+      ],
+      "id": "8d8d031f-ce15-45ac-88d8-b419c5cdf618",
+      "name": "Comment Generator",
+      "credentials": {
+        "openAiApi": {
+          "id": "ceqiXumfieXIw3az",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "07d61c89-0500-4a6c-ba10-3ad41197fd4a",
+              "name": "Comment",
+              "value": "={{ $json.message.content }}",
+              "type": "string"
+            },
+            {
+              "id": "499fd672-4c1b-44c5-8e29-607180ee1707",
+              "name": "Post Text",
+              "value": "={{ $('If').item.json['Post Text'] }}",
+              "type": "string"
+            },
+            {
+              "id": "9c4fdafc-a360-40c3-90c8-61938d550a0b",
+              "name": "Subreddit",
+              "value": "={{ $('If').item.json.Subreddit }}",
+              "type": "string"
+            },
+            {
+              "id": "a8255889-69e2-4a65-ba7f-36a956e9da8d",
+              "name": "Title",
+              "value": "={{ $('If').item.json.Title }}",
+              "type": "string"
+            },
+            {
+              "id": "b4446ad8-4221-43c5-95fe-de2904ffff79",
+              "name": "Upvotes",
+              "value": "={{ $('If').item.json.Upvotes }}",
+              "type": "number"
+            },
+            {
+              "id": "95a108c4-2d1d-4017-a192-6c6b33c1aada",
+              "name": "URL",
+              "value": "={{ $('If').item.json.URL }}",
+              "type": "string"
+            },
+            {
+              "id": "932da880-fca8-48d1-b08d-e6ed75a1aaf7",
+              "name": "ID",
+              "value": "={{ $('If').item.json.ID }}",
+              "type": "string"
+            },
+            {
+              "id": "83dab664-123f-4de3-8ea7-fba8ec14bea8",
+              "name": "",
+              "value": "",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        416,
+        320
+      ],
+      "id": "c673a978-3d48-4591-bbaa-2e9d539f5378",
+      "name": "Comment"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1XpGbFAbvLO91lSSfPbywYwgC2C3NxqxJ81YUZOe7Xfo",
+          "mode": "list",
+          "cachedResultName": "Reddit Comment",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1XpGbFAbvLO91lSSfPbywYwgC2C3NxqxJ81YUZOe7Xfo/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1XpGbFAbvLO91lSSfPbywYwgC2C3NxqxJ81YUZOe7Xfo/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Comment": "={{ $json.Comment }}",
+            "Post Text": "={{ $json['Post Text'] }}",
+            "Subreddit": "={{ $json.Subreddit }}",
+            "Title": "={{ $json.Title }}",
+            "Upvotes": "={{ $json.Upvotes }}",
+            "URL": "={{ $json.URL }}",
+            "ID": "={{ $json.ID }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Comment",
+              "displayName": "Comment",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Post Text",
+              "displayName": "Post Text",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Subreddit",
+              "displayName": "Subreddit",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Title",
+              "displayName": "Title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Upvotes",
+              "displayName": "Upvotes",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "URL",
+              "displayName": "URL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "ID",
+              "displayName": "ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1088,
+        336
+      ],
+      "id": "f55f5e3c-e336-436a-89d2-3b214efd9833",
+      "name": "Add Details to Sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "54w9vcN80HDUT51i",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "postComment",
+        "postId": "={{ $json.ID }}",
+        "commentText": "={{ $json.Comment }}"
+      },
+      "type": "n8n-nodes-base.reddit",
+      "typeVersion": 1,
+      "position": [
+        1280,
+        336
+      ],
+      "id": "790b2d50-7065-45f0-8e6d-c01533f37943",
+      "name": "Make Reddit Comment",
+      "credentials": {
+        "redditOAuth2Api": {
+          "id": "8h7j0UjJRMc9Bf9F",
+          "name": "Reddit account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Search for a post": {
+      "main": [
+        [
+          {
+            "node": "Post Details",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Comment Generator",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Add Details to Sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Search for a post",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Post Details": {
+      "main": [
+        [
+          {
+            "node": "Filter Relevance",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter Relevance": {
+      "main": [
+        [
+          {
+            "node": "Relevance (Yes/No)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Relevance (Yes/No)": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Comment Generator": {
+      "main": [
+        [
+          {
+            "node": "Comment",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Comment": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Add Details to Sheet": {
+      "main": [
+        [
+          {
+            "node": "Make Reddit Comment",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Make Reddit Comment": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Asia/Kolkata",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "versionId": "58b9a9b5-cca1-4e1e-a2e5-2224ea405ae4",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "c6fbe303b567ca704776106941d288c1c745876309c8b4f0a853d8ce9fde8fc2"
+  },
+  "id": "hBOONw2CYRbhnAh6",
+  "tags": []
+}
