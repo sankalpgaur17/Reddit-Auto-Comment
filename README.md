@@ -41,7 +41,7 @@ Is this relevant to my context? Reply Yes or No only.
 - Keep posts with "Yes" responses only.  
 
 **Screenshot:**  
-![LLM Relevance Check](./Prompt 1.png)
+![LLM Relevance Check](./Prompt1.png)
 
 ---
 
@@ -57,7 +57,7 @@ Reddit Post Text: {{ $json.selftext }}
 
 
 **Screenshot:**  
-![Comment Generation](./Prompt 2.png)
+![Comment Generation](./Prompt2.png)
 
 ---
 
